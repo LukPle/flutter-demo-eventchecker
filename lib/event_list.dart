@@ -17,7 +17,7 @@ class EventListState extends State<EventList> {
     if(events.isNotEmpty) {
 
       return ListView.builder(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(16),
           itemCount: events.length,
 
           itemBuilder: (context, item) {
@@ -43,7 +43,7 @@ class EventListState extends State<EventList> {
   Widget buildActionButton() {
 
     return FloatingActionButton.extended(
-        label: const Text("Add Event",
+        label: const Text("Add New Event",
             style: TextStyle(fontSize: 16)),
         icon: const Icon(Icons.add),
         onPressed: () {
@@ -52,6 +52,7 @@ class EventListState extends State<EventList> {
     );
   }
 
+  @override
   Widget build(BuildContext context) {
 
     return Scaffold(
