@@ -47,9 +47,19 @@ class EventListState extends State<EventList> {
             style: TextStyle(fontSize: 16)),
         icon: const Icon(Icons.add),
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (_) => AddEvent()));
+            awaitNewEvent();
         }
     );
+  }
+
+  void awaitNewEvent() async {
+
+    Event newEvent = await Navigator.push(context, MaterialPageRoute(builder: (_) => AddEvent()));
+
+    setState(() {
+
+      events.add(newEvent);
+    });
   }
 
   @override
@@ -61,7 +71,7 @@ class EventListState extends State<EventList> {
       ),
       body: buildList(),
             floatingActionButton: buildActionButton(),
-            floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+            floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat
     );
   }
 }

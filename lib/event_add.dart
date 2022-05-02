@@ -40,8 +40,8 @@ class AddEventState extends State<AddEvent> {
           minimumSize: const Size.fromHeight(40),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
         onPressed: () {
-          events.add(Event(titleController.text));
-          Navigator.push(context, MaterialPageRoute(builder: (_) => EventList()));
+          Event event = Event(titleController.text);
+          Navigator.pop(context, event);
         }
     );
   }
