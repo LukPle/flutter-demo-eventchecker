@@ -11,6 +11,7 @@ class AddEvent extends StatefulWidget {
 class AddEventState extends State<AddEvent> {
 
   final titleController = TextEditingController();
+  final descriptionController = TextEditingController();
 
   Widget buildEmptySpace(double height) {
 
@@ -40,7 +41,7 @@ class AddEventState extends State<AddEvent> {
           minimumSize: const Size.fromHeight(40),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
         onPressed: () {
-          Event event = Event(titleController.text);
+          Event event = Event(titleController.text.trim(), descriptionController.text.trim());
           Navigator.pop(context, event);
         }
     );
@@ -59,6 +60,8 @@ class AddEventState extends State<AddEvent> {
           children: [
             buildEmptySpace(16),
             buildTextField("Event Title", "Concert", titleController),
+            buildEmptySpace(24),
+            buildTextField("Event Description", "My favourite band", descriptionController),
             buildEmptySpace(64),
             buildButton("Create Event")
           ])

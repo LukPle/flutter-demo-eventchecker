@@ -25,7 +25,9 @@ class EventListState extends State<EventList> {
             return Card(
               child: ListTile(
                 title: Text(events[item].getTitle(),
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500))
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
+                subtitle: Text(events[item].getDescription(),
+                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400))
               ),
             );
           }

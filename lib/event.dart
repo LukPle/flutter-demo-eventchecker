@@ -1,12 +1,14 @@
 class Event {
 
   String title;
-  // description;
+  String description;
   // date, time
   // location
   // type, outdoor, indoor
 
-  Event(this.title);
+  Event(this.title, this.description);
 
   getTitle() {return title;}
+
+  getDescription() {return description;}
 }
