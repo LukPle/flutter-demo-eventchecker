@@ -1,3 +1,4 @@
+import 'package:event_checker/event_detail.dart';
 import 'package:flutter/material.dart';
 import 'event.dart';
 import 'event_add.dart';
@@ -27,8 +28,14 @@ class EventListState extends State<EventList> {
                 title: Text(events[item].getTitle(),
                     style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
                 subtitle: Text(events[item].getDescription(),
-                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400))
+                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400)),
+                trailing: const Icon(Icons.navigate_next),
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => EventDetailPage(event: events[item])));
+                }
               ),
+              elevation: 4,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))
             );
           }
       );

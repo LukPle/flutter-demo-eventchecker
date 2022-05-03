@@ -14,7 +14,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(
         primaryColor: Colors.lightBlue,
-        secondaryHeaderColor: Colors.blueAccent
+        secondaryHeaderColor: Colors.blueAccent,
+        scaffoldBackgroundColor: const Color.fromARGB(255, 245, 245, 245)
       ),
       home: EventList(),
     );

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'event.dart';
-import 'event_list.dart';
 
 class AddEvent extends StatefulWidget {
 
