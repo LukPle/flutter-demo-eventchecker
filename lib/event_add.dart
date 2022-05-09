@@ -11,6 +11,8 @@ class AddEventState extends State<AddEvent> {
 
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
+  late DateTime dateTime;
+  String dateTimeText = "Date and Time";
 
   Widget buildEmptySpace(double height) {
 
@@ -31,7 +33,7 @@ class AddEventState extends State<AddEvent> {
     );
   }
 
-  Widget buildButton(String buttonText) {
+  Widget buildElevatedButton(String buttonText) {
 
     return ElevatedButton(
         child: Text(buttonText,
@@ -40,10 +42,91 @@ class AddEventState extends State<AddEvent> {
           minimumSize: const Size.fromHeight(40),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
         onPressed: () {
-          Event event = Event(titleController.text.trim(), descriptionController.text.trim());
+          Event event = Event(
+              titleController.text.trim(),
+              descriptionController.text.trim(),
+              dateTime,
+              dateTimeText);
           Navigator.pop(context, event);
         }
     );
+  }
+
+  Widget buildOutlinedButton(String buttonText) {
+
+    return OutlinedButton(
+        child: Text(buttonText,
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w400)),
+        style: OutlinedButton.styleFrom(
+            minimumSize: const Size.fromHeight(55),
+            side: const BorderSide(width: 1.25, color: Colors.grey),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+        onPressed: () {
+          pickDateTime(context);
+        }
+    );
+  }
+
+  Future pickDateTime(BuildContext context) async {
+
+    final date = await pickDate(context);
+    if(date == null) {return;}
+
+    final time = await pickTime(context);
+    if(time == null) {return;}
+
+    setState(() {
+
+      dateTime = DateTime(
+          date.year,
+          date.month,
+          date.day,
+          time.hour,
+          time.minute
+      );
+
+      dateTimeText = dateTime.day.toString().padLeft(2, "0") + "." +
+          dateTime.month.toString().padLeft(2, "0") + "." +
+          dateTime.year.toString() + " - " +
+          dateTime.hour.toString().padLeft(2, "0") + ":" +
+          dateTime.minute.toString().padLeft(2, "0");
+    });
+  }
+
+  Future pickDate(BuildContext context) async {
+
+    final selectedDate = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime.now(),
+        lastDate: DateTime(DateTime.now().year + 25)
+    );
+
+    if(selectedDate == null) {
+
+      return null;
+    }
+    else {
+
+      return selectedDate;
+    }
+  }
+
+  Future pickTime(BuildContext context) async {
+
+    final selectedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now()
+    );
+
+    if(selectedTime == null) {
+
+      return null;
+    }
+    else {
+
+      return selectedTime;
+    }
   }
 
   @override
@@ -61,8 +144,10 @@ class AddEventState extends State<AddEvent> {
             buildTextField("Event Title", "Concert", titleController),
             buildEmptySpace(24),
             buildTextField("Event Description", "My favourite band", descriptionController),
+            buildEmptySpace(24),
+            buildOutlinedButton(dateTimeText),
             buildEmptySpace(64),
-            buildButton("Create Event")
+            buildElevatedButton("Create Event")
           ])
       )
     );
