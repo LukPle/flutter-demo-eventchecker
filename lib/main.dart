@@ -1,22 +1,18 @@
+import 'package:event_checker/res/themes.dart';
 import 'package:flutter/material.dart';
-import 'event_list.dart';
+import 'screens/event_list.dart';
 
 void main() {
-
-  runApp(MyApp());
+  runApp(EventPlanner());
 }
 
-class MyApp extends StatelessWidget {
-
+class EventPlanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
-      theme: ThemeData(
-        primaryColor: Colors.lightBlue,
-        secondaryHeaderColor: Colors.blueAccent,
-        scaffoldBackgroundColor: const Color.fromARGB(255, 245, 245, 245)
-      ),
+      debugShowCheckedModeBanner: false,
+      theme: AppThemes.lightTheme,
+      darkTheme: AppThemes.darkTheme,
       home: EventList(),
     );
   }

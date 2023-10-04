@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'event.dart';
+import '../data/event.dart';
 
 class EventDetailPage extends StatefulWidget {
 
@@ -17,10 +17,10 @@ class EventDetailPageState extends State<EventDetailPage> {
 
     return Scaffold(
         appBar: AppBar(
-            title: Text(widget.event.getTitle())
+            title: Text(widget.event.title)
         ),
         body: Card(
-            child: Text(widget.event.getDescription())
+            child: Text(widget.event.description)
         )
     );
   }
