@@ -1,6 +1,6 @@
 import 'package:event_checker/res/themes.dart';
+import 'package:event_checker/screens/splash.dart';
 import 'package:flutter/material.dart';
-import 'screens/event_list.dart';
 
 void main() {
   runApp(EventPlanner());
@@ -13,7 +13,7 @@ class EventPlanner extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: AppThemes.lightTheme,
       darkTheme: AppThemes.darkTheme,
-      home: EventList(),
+      home: SplashScreen(),
     );
   }
 }

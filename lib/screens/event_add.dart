@@ -34,7 +34,7 @@ class AddEventState extends State<AddEvent> {
                 const SizedBox(height: 25),
                 buildCategoryTypeArea(),
                 const SizedBox(height: 50),
-                buildElevatedButton("Create Event"),
+                buildElevatedButton(AppStrings.createButtonLabel),
                 const SizedBox(height: 50),
               ],
             ),
@@ -51,9 +51,9 @@ class AddEventState extends State<AddEvent> {
         const Text(AppStrings.generalInformationHeading,
             style: AppTextStyles.headingStyle),
         const SizedBox(height: 10),
-        buildTextField("Event Title", titleController),
+        buildTextField(AppStrings.eventTitleHint, titleController),
         const SizedBox(height: 10),
-        buildTextField("Event Description", descriptionController),
+        buildTextField(AppStrings.eventDescriptionHint, descriptionController),
       ],
     );
   }

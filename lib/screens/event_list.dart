@@ -16,6 +16,7 @@ class EventListState extends State<EventList> {
   List<Event> listedEvents = <Event>[];
   List<Event> allEvents = <Event>[];
   bool isInSearchMode = false;
+  DateTime now = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +35,7 @@ class EventListState extends State<EventList> {
           ],
         ),
         body: SafeArea(
-            child: listedEvents.isNotEmpty ? buildList() : buildPreview()),
+            child: listedEvents.isNotEmpty ? buildLists() : buildPreview()),
         floatingActionButton: buildActionButton(),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat);
   }
@@ -68,32 +69,70 @@ class EventListState extends State<EventList> {
     );
   }
 
-  Widget buildList() {
+  Widget buildLists() {
     return SingleChildScrollView(
-      child: Column(
-        children: [
-          ListView.builder(
-              padding: const EdgeInsets.all(10),
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: listedEvents.length,
-              itemBuilder: (context, item) {
-                return buildEventCard(item);
-              }),
-          const SizedBox(height: 85),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.all(15),
+        child: Column(
+          children: [
+            const SizedBox(height: 10),
+            buildEventListForWeek(),
+            const SizedBox(height: 25),
+            buildEventListForLater(),
+            const SizedBox(height: 85),
+          ],
+        ),
       ),
     );
   }
 
-  Widget buildEventCard(int item) {
+  Widget buildEventListForWeek() {
+    return getWeeklyEvents().isNotEmpty
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(AppStrings.weeklyEventsHeading,
+                  style: AppTextStyles.headingStyle),
+              const SizedBox(height: 10),
+              ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: getWeeklyEvents().length,
+                  itemBuilder: (context, item) {
+                    return buildEventCard(getWeeklyEvents(), item);
+                  }),
+            ],
+          )
+        : buildEmptyCard();
+  }
+
+  Widget buildEventListForLater() {
+    return getLaterEvents().isNotEmpty
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(AppStrings.laterEventsHeading,
+                  style: AppTextStyles.headingStyle),
+              const SizedBox(height: 10),
+              ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: getLaterEvents().length,
+                  itemBuilder: (context, item) {
+                    return buildEventCard(getLaterEvents(), item);
+                  }),
+            ],
+          )
+        : const SizedBox.shrink();
+  }
+
+  Widget buildEventCard(List<Event> events, int item) {
     return Card(
       child: ListTile(
           leading: buildCategoryPreview(
-              context, getEventTypeIcon(listedEvents[item].eventType)),
-          title: Text(listedEvents[item].title,
-              style: AppTextStyles.heavyTextStyle),
-          subtitle: Text(listedEvents[item].getDateTimeText(),
+              context, getEventTypeIcon(events[item].eventType)),
+          title: Text(events[item].title, style: AppTextStyles.heavyTextStyle),
+          subtitle: Text(events[item].getDateTimeText(),
               style: AppTextStyles.textStyle),
           trailing: const Icon(Icons.navigate_next),
           onTap: () {
@@ -101,11 +140,30 @@ class EventListState extends State<EventList> {
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
-                        EventDetailPage(event: listedEvents[item])));
+                        EventDetailPage(event: events[item])));
           }),
       elevation: 4,
       shape: RoundedRectangleBorder(
         borderRadius: AppBorders.borderRadius,
+      ),
+    );
+  }
+
+  Widget buildEmptyCard() {
+    return Container(
+      padding: const EdgeInsets.all(15),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(width: 1, color: Colors.grey),
+          borderRadius: AppBorders.borderRadius),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: const [
+          Icon(Icons.check_circle, color: Colors.green),
+          SizedBox(width: 15),
+          Text(AppStrings.noEventsAvailableLabel,
+              style: AppTextStyles.heavyTextStyle),
+        ],
       ),
     );
   }
@@ -133,6 +191,31 @@ class EventListState extends State<EventList> {
     });
   }
 
+  DateTime getStartOfWeek() {
+    DateTime startOfWeek = now.subtract(Duration(days: now.weekday - 1));
+    return DateTime(startOfWeek.year, startOfWeek.month, startOfWeek.day);
+  }
+
+  DateTime getEndOfWeek() {
+    DateTime endOfWeek =
+        now.add(Duration(days: DateTime.daysPerWeek - now.weekday));
+    return DateTime(endOfWeek.year, endOfWeek.month, endOfWeek.day, 23, 59, 59);
+  }
+
+  List<Event> getWeeklyEvents() {
+    return listedEvents
+        .where((item) =>
+            item.dateTime.isAfter(getStartOfWeek()) &&
+            item.dateTime.isBefore(getEndOfWeek()))
+        .toList();
+  }
+
+  List<Event> getLaterEvents() {
+    return listedEvents
+        .where((item) => item.dateTime.isAfter(getEndOfWeek()))
+        .toList();
+  }
+
   void awaitNewEvent() async {
     Event newEvent = await Navigator.push(
         context, MaterialPageRoute(builder: (_) => AddEvent()));
@@ -140,6 +223,10 @@ class EventListState extends State<EventList> {
     setState(() {
       allEvents.add(newEvent);
       allEvents.sort((a, b) => a.dateTime.compareTo(b.dateTime));
+
+      if (!isInSearchMode) {
+        listedEvents = allEvents;
+      }
     });
   }
 }
