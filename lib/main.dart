@@ -3,6 +3,7 @@ import 'package:event_checker/screens/splash.dart';
 import 'package:flutter/material.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(EventPlanner());
 }
 

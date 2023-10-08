@@ -1,10 +1,12 @@
 import 'package:event_checker/components/category_preview.dart';
+import 'package:event_checker/components/datetime_text_creator.dart';
+import 'package:event_checker/data/user_name.dart';
 import 'package:event_checker/screens/event_detail.dart';
 import 'package:event_checker/data/event_types.dart';
 import 'package:event_checker/res/strings.dart';
 import 'package:event_checker/res/styles.dart';
 import 'package:flutter/material.dart';
-import '../data/event.dart';
+import 'package:event_checker/data/event.dart';
 import 'event_add.dart';
 
 class EventList extends StatefulWidget {
@@ -17,6 +19,20 @@ class EventListState extends State<EventList> {
   List<Event> allEvents = <Event>[];
   bool isInSearchMode = false;
   DateTime now = DateTime.now();
+  String username = "";
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) async {
+        String usernameData = await getUsername(context);
+        setState(() {
+          username = usernameData;
+        });
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,14 +56,31 @@ class EventListState extends State<EventList> {
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat);
   }
 
+  Widget buildHeader() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+            AppStrings().headerDateTime(getWeekdayName(now.weekday),
+                convertDateTimeToText(now, excludeTime: true)),
+            style: AppTextStyles()
+                .fadedTextStyle(MediaQuery.of(context).platformBrightness)),
+        const SizedBox(height: 3),
+        Text(AppStrings().headerGreeting(now, username),
+            style: AppTextStyles.greetingHeading),
+        const SizedBox(height: 25),
+      ],
+    );
+  }
+
   Widget buildPreview() {
-    return Center(
+    return const Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
+        children: [
           Icon(Icons.playlist_remove_rounded, size: 60),
           SizedBox(height: 20),
-          Text(AppStrings.previewLabel, style: AppTextStyles.heavyTextStyle)
+          Text(AppStrings.previewLabel, style: AppTextStyles.heavyTextStyle),
         ],
       ),
     );
@@ -74,8 +107,10 @@ class EventListState extends State<EventList> {
       child: Padding(
         padding: const EdgeInsets.all(15),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 10),
+            isInSearchMode ? const SizedBox.shrink() : buildHeader(),
             buildEventListForWeek(),
             const SizedBox(height: 25),
             buildEventListForLater(),
@@ -156,9 +191,9 @@ class EventListState extends State<EventList> {
           color: Colors.white,
           border: Border.all(width: 1, color: Colors.grey),
           borderRadius: AppBorders.borderRadius),
-      child: Row(
+      child: const Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
+        children: [
           Icon(Icons.check_circle, color: Colors.green),
           SizedBox(width: 15),
           Text(AppStrings.noEventsAvailableLabel,
@@ -217,16 +252,20 @@ class EventListState extends State<EventList> {
   }
 
   void awaitNewEvent() async {
-    Event newEvent = await Navigator.push(
-        context, MaterialPageRoute(builder: (_) => AddEvent()));
+    try {
+      Event newEvent = await Navigator.push(
+          context, MaterialPageRoute(builder: (_) => AddEvent()));
 
-    setState(() {
-      allEvents.add(newEvent);
-      allEvents.sort((a, b) => a.dateTime.compareTo(b.dateTime));
+      setState(() {
+        allEvents.add(newEvent);
+        allEvents.sort((a, b) => a.dateTime.compareTo(b.dateTime));
 
-      if (!isInSearchMode) {
-        listedEvents = allEvents;
-      }
-    });
+        if (!isInSearchMode) {
+          listedEvents = allEvents;
+        }
+      });
+    } catch (exception) {
+      return;
+    }
   }
 }

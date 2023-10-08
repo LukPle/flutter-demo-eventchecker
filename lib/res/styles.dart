@@ -32,6 +32,9 @@ class AppTextStyles {
         fontWeight: isHint ? FontWeight.w400 : FontWeight.w500,
         color: isHint ? Colors.white70 : Colors.white);
   }
+
+  static const TextStyle greetingHeading =
+      TextStyle(fontSize: 20, fontWeight: FontWeight.w500);
 }
 
 class AppBorders {

@@ -1,4 +1,6 @@
 import 'package:event_checker/components/category_preview.dart';
+import 'package:event_checker/components/datetime_text_creator.dart';
+import 'package:event_checker/components/elevated_button.dart';
 import 'package:event_checker/data/event_types.dart';
 import 'package:event_checker/res/strings.dart';
 import 'package:event_checker/res/styles.dart';
@@ -34,7 +36,7 @@ class AddEventState extends State<AddEvent> {
                 const SizedBox(height: 25),
                 buildCategoryTypeArea(),
                 const SizedBox(height: 50),
-                buildElevatedButton(AppStrings.createButtonLabel),
+                buildElevatedButton(AppStrings.createButtonLabel, createEvent),
                 const SizedBox(height: 50),
               ],
             ),
@@ -126,24 +128,6 @@ class AddEventState extends State<AddEvent> {
     );
   }
 
-  Widget buildElevatedButton(String buttonText) {
-    return ElevatedButton(
-        child: Text(buttonText, style: AppTextStyles.buttonStyle),
-        style: ElevatedButton.styleFrom(
-            minimumSize: const Size.fromHeight(50),
-            shape:
-                RoundedRectangleBorder(borderRadius: AppBorders.borderRadius)),
-        onPressed: () {
-          Event event = Event(
-              titleController.text.trim(),
-              descriptionController.text.trim(),
-              eventType,
-              dateTime,
-              dateTimeText);
-          Navigator.pop(context, event);
-        });
-  }
-
   Widget buildOutlinedButton(String buttonText) {
     return OutlinedButton(
         child: Align(
@@ -179,16 +163,7 @@ class AddEventState extends State<AddEvent> {
     setState(() {
       dateTime =
           DateTime(date.year, date.month, date.day, time.hour, time.minute);
-
-      dateTimeText = dateTime.day.toString().padLeft(2, "0") +
-          "." +
-          dateTime.month.toString().padLeft(2, "0") +
-          "." +
-          dateTime.year.toString() +
-          " - " +
-          dateTime.hour.toString().padLeft(2, "0") +
-          ":" +
-          dateTime.minute.toString().padLeft(2, "0");
+      dateTimeText = convertDateTimeToText(dateTime);
     });
   }
 
@@ -215,5 +190,15 @@ class AddEventState extends State<AddEvent> {
     } else {
       return selectedTime;
     }
+  }
+
+  void createEvent() {
+    Event event = Event(
+        titleController.text.trim(),
+        descriptionController.text.trim(),
+        eventType,
+        dateTime,
+        dateTimeText);
+    Navigator.of(context).pop(event);
   }
 }
