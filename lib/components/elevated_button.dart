@@ -1,7 +1,8 @@
 import 'package:event_checker/res/styles.dart';
 import 'package:flutter/material.dart';
 
-Widget buildElevatedButton(String buttonText, VoidCallback action, {bool isEnabled = true}) {
+Widget buildElevatedButton(String buttonText, VoidCallback action,
+    {bool isEnabled = true}) {
   return ElevatedButton(
     child: Text(buttonText, style: AppTextStyles.buttonStyle),
     style: ElevatedButton.styleFrom(

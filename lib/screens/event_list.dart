@@ -1,6 +1,7 @@
 import 'package:event_checker/components/category_preview.dart';
 import 'package:event_checker/components/datetime_text_creator.dart';
 import 'package:event_checker/data/user_name.dart';
+import 'package:event_checker/res/colors.dart';
 import 'package:event_checker/screens/event_detail.dart';
 import 'package:event_checker/data/event_types.dart';
 import 'package:event_checker/res/strings.dart';
@@ -188,16 +189,26 @@ class EventListState extends State<EventList> {
     return Container(
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(width: 1, color: Colors.grey),
-          borderRadius: AppBorders.borderRadius),
+        color: MediaQuery.of(context).platformBrightness == Brightness.light
+            ? Colors.white
+            : Colors.white10,
+        border: Border.all(
+          width: 1,
+          color: MediaQuery.of(context).platformBrightness == Brightness.light
+              ? Colors.grey
+              : Colors.white24,
+        ),
+        borderRadius: AppBorders.borderRadius,
+      ),
       child: const Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(Icons.check_circle, color: Colors.green),
           SizedBox(width: 15),
-          Text(AppStrings.noEventsAvailableLabel,
-              style: AppTextStyles.heavyTextStyle),
+          Text(
+            AppStrings.noEventsAvailableLabel,
+            style: AppTextStyles.heavyTextStyle,
+          ),
         ],
       ),
     );
@@ -210,6 +221,10 @@ class EventListState extends State<EventList> {
           label: const Text(AppStrings.addButtonLabel,
               style: AppTextStyles.buttonStyle),
           icon: const Icon(Icons.add),
+          backgroundColor:
+              MediaQuery.of(context).platformBrightness == Brightness.light
+                  ? AppColors.primaryLight
+                  : AppColors.primaryDark,
           onPressed: () {
             awaitNewEvent();
           }),
