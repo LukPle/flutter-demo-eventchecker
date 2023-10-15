@@ -6,7 +6,7 @@ class AppThemes {
     colorScheme: const ColorScheme.light().copyWith(
       primary: AppColors.primaryLight,
       onPrimary: Colors.white,
-      secondary: AppColors.accentLight,
+      secondary: AppColors.secondaryLight,
       onSecondary: Colors.white,
       background: AppColors.scaffoldBackgroundLight,
     ),
@@ -16,7 +16,7 @@ class AppThemes {
     colorScheme: const ColorScheme.dark().copyWith(
       primary: AppColors.primaryDark,
       onPrimary: Colors.white,
-      secondary: AppColors.accentDark,
+      secondary: AppColors.secondaryDark,
       onSecondary: Colors.white,
       background: AppColors.scaffoldBackgroundDark,
     ),
