@@ -193,12 +193,8 @@ class AddEventState extends State<AddEvent> {
   }
 
   void createEvent() {
-    Event event = Event(
-        titleController.text.trim(),
-        descriptionController.text.trim(),
-        eventType,
-        dateTime,
-        dateTimeText);
+    Event event = Event(titleController.text.trim(),
+        descriptionController.text.trim(), eventType, dateTime, dateTimeText);
     Navigator.of(context).pop(event);
   }
 }

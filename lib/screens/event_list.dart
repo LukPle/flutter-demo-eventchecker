@@ -163,24 +163,51 @@ class EventListState extends State<EventList> {
   }
 
   Widget buildEventCard(List<Event> events, int item) {
-    return Card(
-      child: ListTile(
-          leading: buildCategoryPreview(
-              context, getEventTypeIcon(events[item].eventType)),
-          title: Text(events[item].title, style: AppTextStyles.heavyTextStyle),
-          subtitle: Text(events[item].getDateTimeText(),
-              style: AppTextStyles.textStyle),
-          trailing: const Icon(Icons.navigate_next),
-          onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        EventDetailPage(event: events[item])));
-          }),
-      elevation: 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: AppBorders.borderRadius,
+    return Dismissible(
+      key: Key(events[item].toString()),
+      direction: DismissDirection.endToStart,
+      onDismissed: (direction) {
+        setState(() {
+          Event removedObject = events[item];
+          allEvents.remove(removedObject);
+          listedEvents.remove(removedObject);
+        });
+      },
+      background: Container(
+        alignment: AlignmentDirectional.centerEnd,
+        decoration: BoxDecoration(
+          color: Colors.red,
+          border: Border.all(width: 0),
+          borderRadius: AppBorders.borderRadius,
+        ),
+        child: const Padding(
+          padding: EdgeInsets.only(right: 25),
+          child: Icon(
+            Icons.delete,
+            color: Colors.white,
+          ),
+        ),
+      ),
+      child: Card(
+        child: ListTile(
+            leading: buildCategoryPreview(
+                context, getEventTypeIcon(events[item].eventType)),
+            title:
+                Text(events[item].title, style: AppTextStyles.heavyTextStyle),
+            subtitle: Text(events[item].getDateTimeText(),
+                style: AppTextStyles.textStyle),
+            trailing: const Icon(Icons.navigate_next),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          EventDetailPage(event: events[item])));
+            }),
+        elevation: 4,
+        shape: RoundedRectangleBorder(
+          borderRadius: AppBorders.borderRadius,
+        ),
       ),
     );
   }
